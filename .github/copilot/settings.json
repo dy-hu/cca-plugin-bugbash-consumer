@@ -1,5 +1,5 @@
 {
   "enabledPlugins": {
-    "git@github.com:dy-hu/cca-plugin-bugbash.git": true
+    "https://gitlab.com/foo/bar": true
   }
 }
