@@ -20,14 +20,14 @@ Edit `.github/copilot/settings.json` for the setup the row needs, open an issue 
 ## Test matrix
 
 ### Settings loading
-- [ ] Repo-level `.github/copilot/settings.json` loads (baseline)
+- [x] Repo-level `.github/copilot/settings.json` loads (baseline)
 - [ ] Org-level `copilot/settings.json` in `dy-hu/.github` loads when repo settings are absent
 - [ ] Repo entry wins over org entry for the same spec
 - [ ] Malformed `settings.json` does not crash the job; a warning surfaces
 - [ ] `{"enabledPlugins": {"<spec>": false}}` skips the plugin (no clone in setup logs)
 
 ### Spec parsing and resolution
-- [ ] `dy-hu/cca-plugin-bugbash` (owner/repo)
+- [x] `dy-hu/cca-plugin-bugbash` (owner/repo)
 - [ ] `dy-hu/cca-plugin-bugbash@<sha>` (pinned commit)
 - [ ] `dy-hu/cca-plugin-bugbash@some-branch` (branch ref)
 - [ ] `https://github.com/dy-hu/cca-plugin-bugbash.git` (HTTPS with .git)
@@ -44,15 +44,15 @@ Edit `.github/copilot/settings.json` for the setup the row needs, open an issue 
 - [ ] Marketplace outside the allowlist is blocked under `strictKnownMarketplaces`
 
 ### Plugin loading
-- [ ] `plugin.json` at repo root is picked up
+- [x] `plugin.json` at repo root is picked up
 - [ ] `plugin.json` in a subpath is picked up (needs a second fixture repo)
 - [ ] Plugin's `.mcp.json` merges into session MCP config
 - [ ] Plugin's `.lsp.json` registers LSP servers
 - [ ] Rapper appears in the agent's `task` tool agent list
 
 ### Dispatch (the markers do the verification)
-- [ ] "Write a rap about CI and save to OUT.md" → `DISPATCH:RAPPER-AGENT` + every line ends with `RAPPER-AGENT`
-- [ ] "Write a poem about CI and save to OUT.md" → `DISPATCH:POETRY-COMMAND` + every line ends with `POETRY-COMMAND`
+- [x] "Write a rap about CI and save to OUT.md" → `DISPATCH:RAPPER-AGENT` + every line ends with `RAPPER-AGENT`
+- [x] "Write a poem about CI and save to OUT.md" → `DISPATCH:POETRY-COMMAND` + every line ends with `POETRY-COMMAND`
 - [ ] "Write a limerick about CI and save to OUT.md" → `DISPATCH:RAPPING-SKILL` + every line ends with `RAPPING-SKILL`
 - [ ] A Figma-related ask → `DISPATCH:FIGMA-AGENT` + sentences end with `FIGMA-AGENT`
 - [ ] Rap prompt does not produce skill markers, and vice versa (no cross-surface bleed)
