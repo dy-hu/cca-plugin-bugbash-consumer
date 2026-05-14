@@ -9,7 +9,7 @@ Each surface prints a unique `DISPATCH:...` line plus a per-line marker, so the 
 | Surface | Trigger phrase | Dispatch line | Per-line marker |
 |---|---|---|---|
 | Rapper agent | "write a rap song about X" | `DISPATCH:agent:Rapper` | `AGENT-RAPPER-FOSHIZZLE` |
-| poetry-command | "write a poem about X" or `/poetry-command` | `DISPATCH:command:poetry` | `COMMAND-POETRY-HAIKU` |
+| poetry-command | "write a poem about X" | `DISPATCH:command:poetry` | `COMMAND-POETRY-HAIKU` |
 | rapping-skill | "write a limerick about X" | `DISPATCH:skill:rapping` | `SKILL-RAPPER-WORDUP` |
 | FigmaGetter agent | Figma-related ask | `DISPATCH:agent:FigmaGetter` | `AGENT-FIGMA-SHAZAM` |
 
