@@ -1,5 +1,1 @@
-{
-  "enabledPlugins": {
-    "https://gitlab.com/foo/bar": true
-  }
-}
+{ "enabledPlugins": { "./local-plugin": true } }
