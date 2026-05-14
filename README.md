@@ -46,8 +46,8 @@ Edit `.github/copilot/settings.json` for the setup the row needs, open an issue 
 ### Plugin loading
 - [x] `plugin.json` at repo root is picked up
 - [ ] `plugin.json` in a subpath is picked up (needs a second fixture repo)
-- [ ] Plugin's `.mcp.json` merges into session MCP config
-- [ ] Plugin's `.lsp.json` registers LSP servers
+- [x] Plugin's `.mcp.json` merges into session MCP config
+- [x] Plugin's `.lsp.json` registers LSP servers
 - [ ] Rapper appears in the agent's `task` tool agent list
 
 ### Dispatch (the markers do the verification)
