@@ -21,7 +21,7 @@ Edit `.github/copilot/settings.json` for the setup the row needs, open an issue 
 
 ### Settings loading
 - [x] Repo-level `.github/copilot/settings.json` loads (baseline)
-- [ ] Org-level `copilot/settings.json` in `dy-hu/.github` loads when repo settings are absent
+- [x] Org-level `copilot/settings.json` in `dy-hu/.github` loads when repo settings are absent
 - [ ] Repo entry wins over org entry for the same spec
 - [ ] Malformed `settings.json` does not crash the job; a warning surfaces
 - [ ] `{"enabledPlugins": {"<spec>": false}}` skips the plugin (no clone in setup logs)
