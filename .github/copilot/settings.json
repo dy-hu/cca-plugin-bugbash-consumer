@@ -1,5 +1,8 @@
-{
-  "enabledPlugins": {
-    "dy-hu/cca-plugin-bugbash": false
-  }
-}
+ {
+   "extraKnownMarketplaces": {
+     "bugbash": "dy-hu/cca-plugin-bugbash-marketplace"
+   },
+   "enabledPlugins": {
+     "rapper@bugbash": true
+   }
+ }
