@@ -2,69 +2,67 @@
 
 Consumer repo for the [CCA plugins bug bash](https://github.com/github/sweagentd/issues/11889).
 
-Plugin fixture: [`dy-hu/cca-plugin-bugbash`](https://github.com/dy-hu/cca-plugin-bugbash) (mirror of belaltaher's `test-plugin-with-agent`).
-Plugin contents:
-- `agents/Rapper.md` — custom agent, signal `FO-SHIZZLE`
-- `agents/FigmaGetter.md` — custom agent with MCP, signal `SHAZAM`
-- `commands/poetry-command.md` — slash command, signal `POEM`
-- `skills/rapping-skill/SKILL.md` — skill, signal `FO-SHIZZLE`
-- `.mcp.json`, `.lsp.json` — plugin-scoped MCP / LSP
+The plugin under test lives at [`dy-hu/cca-plugin-bugbash`](https://github.com/dy-hu/cca-plugin-bugbash) and is enabled via `.github/copilot/settings.json`. It bundles one custom agent (Rapper), one slash command (poetry-command), one skill (rapping-skill), and a second agent with MCP (FigmaGetter).
 
-## How to run a test case
+Each surface prints a unique `DISPATCH:...` line plus a per-line marker, so the agent output alone tells you which surface fired:
 
-1. Edit `.github/copilot/settings.json` on `main` (PR or direct push) to set up the case.
-2. Open a new issue with a prompt that should exercise the loaded surface.
-3. Assign Copilot as the issue's assignee → CCA job kicks off.
-4. Watch the session: setup phase shows plugin clone, agent loop shows tool calls.
-5. Verify the expected outcome below. File any unexpected behavior as a sub-issue under [#11889](https://github.com/github/sweagentd/issues/11889).
+| Surface | Trigger phrase | Dispatch line | Per-line marker |
+|---|---|---|---|
+| Rapper agent | "write a rap song about X" | `DISPATCH:agent:Rapper` | `AGENT-RAPPER-FOSHIZZLE` |
+| poetry-command | "write a poem about X" or `/poetry-command` | `DISPATCH:command:poetry` | `COMMAND-POETRY-HAIKU` |
+| rapping-skill | "write a limerick about X" | `DISPATCH:skill:rapping` | `SKILL-RAPPER-WORDUP` |
+| FigmaGetter agent | Figma-related ask | `DISPATCH:agent:FigmaGetter` | `AGENT-FIGMA-SHAZAM` |
+
+## Running a case
+
+Edit `.github/copilot/settings.json` for the setup the row needs, open an issue with the trigger phrase, and assign Copilot. The session log shows the plugin clone in setup and the dispatch line in the agent loop. If a row uncovers a bug, file a one-liner sub-issue under [#11889](https://github.com/github/sweagentd/issues/11889) and self-assign.
 
 ## Test matrix
 
 ### Settings loading
-- [ ] Repo-level `.github/copilot/settings.json` loads (default case)
+- [ ] Repo-level `.github/copilot/settings.json` loads (baseline)
 - [ ] Org-level `copilot/settings.json` in `dy-hu/.github` loads when repo settings are absent
-- [ ] Merged precedence: repo entry wins over org entry for the same spec
-- [ ] Malformed settings.json (invalid JSON) → job starts, warning surfaced
-- [ ] `enabledPlugins: { "<spec>": false }` skips the plugin (no clone)
+- [ ] Repo entry wins over org entry for the same spec
+- [ ] Malformed `settings.json` does not crash the job; a warning surfaces
+- [ ] `{"enabledPlugins": {"<spec>": false}}` skips the plugin (no clone in setup logs)
 
 ### Spec parsing and resolution
-- [ ] `dy-hu/cca-plugin-bugbash` — happy path, owner/repo
-- [ ] `dy-hu/cca-plugin-bugbash@<sha>` — pinned commit
-- [ ] `dy-hu/cca-plugin-bugbash@some-branch` — branch ref
-- [ ] `https://github.com/dy-hu/cca-plugin-bugbash.git` — full HTTPS URL with `.git`
-- [ ] `git@github.com:dy-hu/cca-plugin-bugbash.git` — SSH URL
-- [ ] `https://gitlab.com/foo/bar` — non-GitHub URL rejected cleanly
-- [ ] `./local-plugin` — local path accepted (plugin checked in to consumer repo)
-- [ ] `/abs/path` — absolute path normalized
-- [ ] `../escape-attempt` — traversal rejected
-- [ ] `""`, `"   "`, `"owner/repo/"` — weird input handled gracefully
+- [ ] `dy-hu/cca-plugin-bugbash` (owner/repo)
+- [ ] `dy-hu/cca-plugin-bugbash@<sha>` (pinned commit)
+- [ ] `dy-hu/cca-plugin-bugbash@some-branch` (branch ref)
+- [ ] `https://github.com/dy-hu/cca-plugin-bugbash.git` (HTTPS with .git)
+- [ ] `git@github.com:dy-hu/cca-plugin-bugbash.git` (SSH)
+- [ ] `https://gitlab.com/foo/bar` rejected cleanly
+- [ ] `./local-plugin` (local path checked into consumer repo)
+- [ ] `../escape-attempt` traversal rejected
+- [ ] Empty string, whitespace, trailing slash handled gracefully
 
 ### Marketplace
-- [ ] `plugin@marketplace` spec resolves via `extraKnownMarketplaces`
-- [ ] Bare plugin name resolves via default marketplace
-- [ ] Missing plugin / missing repo / missing ref / malformed `marketplace.json` all fail cleanly
-- [ ] Marketplace not in allowlist blocked under `strictKnownMarketplaces`
+- [ ] `plugin@marketplace` resolves via `extraKnownMarketplaces`
+- [ ] Bare plugin name resolves via the default marketplace
+- [ ] Missing plugin, missing ref, malformed `marketplace.json` all fail cleanly
+- [ ] Marketplace outside the allowlist is blocked under `strictKnownMarketplaces`
 
-### Plugin loading (use the dy-hu/cca-plugin-bugbash fixture)
-- [ ] `plugin.json` loads from repo root
-- [ ] `plugin.json` loads from subpath (use a fixture with plugin in subdir)
+### Plugin loading
+- [ ] `plugin.json` at repo root is picked up
+- [ ] `plugin.json` in a subpath is picked up (needs a second fixture repo)
 - [ ] Plugin's `.mcp.json` merges into session MCP config
 - [ ] Plugin's `.lsp.json` registers LSP servers
-- [ ] Custom agent is discoverable in the agent's `task` tool
+- [ ] Rapper appears in the agent's `task` tool agent list
 
-### Runtime execution (signal-based verification)
-- [ ] **Rap path:** issue "Write a rap about CI and save to RAP.md" → output contains `FO-SHIZZLE` on every line → agent dispatch worked
-- [ ] **Poem/skill path:** issue "Write a poem about CI and save to POEM.md" → output contains `FO-SHIZZLE` per line → skill loaded
-- [ ] **Command path:** issue "Run `/poetry-command` about CI" → output contains `POEM` per line → command surface invoked
-- [ ] **MCP-agent path:** issue exercising `FigmaGetter` → output contains `SHAZAM` → plugin-defined MCP server attached
-- [ ] `copilot_swe_agent_runtime_entry_point_cca_v3_app` feature flag actually gates plugin loading
+### Dispatch (the markers do the verification)
+- [ ] "Write a rap about CI and save to OUT.md" → `DISPATCH:agent:Rapper` + every line has `AGENT-RAPPER-FOSHIZZLE`
+- [ ] "Write a poem about CI and save to OUT.md" → `DISPATCH:command:poetry` + every line has `COMMAND-POETRY-HAIKU`
+- [ ] "Write a limerick about CI and save to OUT.md" → `DISPATCH:skill:rapping` + every line has `SKILL-RAPPER-WORDUP`
+- [ ] A Figma-related ask → `DISPATCH:agent:FigmaGetter` + sentences end with `AGENT-FIGMA-SHAZAM`
+- [ ] Rap prompt does not produce skill markers, and vice versa (no cross-surface bleed)
 
 ### Safety
-- [ ] Private plugin repo without CCA's access → resolution_failure surfaced, job continues
+- [ ] Private plugin repo without CCA access → resolution_failure surfaced, job continues
 - [ ] Subpath traversal (`owner/repo:../outside`) rejected
-- [ ] Plugin source on a non-GitHub host not silently fetched
+- [ ] Non-GitHub host is not silently fetched
 
 ### Edge cases
-- [ ] Duplicate plugin spec entries (same spec twice with different bool) → deterministic resolution
-- [ ] Two plugins with same `CloneURL` but different subpaths → repo cloned once, both subpaths resolved
-- [ ] Very large `settings.json` (many enabledPlugins entries) loads without timeout
+- [ ] Duplicate spec entries with conflicting bools resolve deterministically
+- [ ] Two plugins with the same clone URL but different subpaths clone the repo once
+- [ ] A large `settings.json` loads within the setup budget
