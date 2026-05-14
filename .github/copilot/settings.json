@@ -1,1 +1,1 @@
-{ "enabledPlugins": { "./local-plugin": true } }
+{ "enabledPlugins": { "../escape-attempt": true } }
