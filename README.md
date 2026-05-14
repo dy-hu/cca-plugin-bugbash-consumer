@@ -4,14 +4,14 @@ Consumer repo for the [CCA plugins bug bash](https://github.com/github/sweagentd
 
 The plugin under test lives at [`dy-hu/cca-plugin-bugbash`](https://github.com/dy-hu/cca-plugin-bugbash) and is enabled via `.github/copilot/settings.json`. It bundles one custom agent (Rapper), one slash command (poetry-command), one skill (rapping-skill), and a second agent with MCP (FigmaGetter).
 
-Each surface prints a unique `DISPATCH:...` line plus a per-line marker, so the agent output alone tells you which surface fired:
+Each surface prints `DISPATCH:<MARKER>` once and tags every line with the same marker, so the agent output alone tells you which surface fired:
 
-| Surface | Trigger phrase | Dispatch line | Per-line marker |
-|---|---|---|---|
-| Rapper agent | "write a rap song about X" | `DISPATCH:agent:Rapper` | `AGENT-RAPPER-FOSHIZZLE` |
-| poetry-command | "write a poem about X" | `DISPATCH:command:poetry` | `COMMAND-POETRY-HAIKU` |
-| rapping-skill | "write a limerick about X" | `DISPATCH:skill:rapping` | `SKILL-RAPPER-WORDUP` |
-| FigmaGetter agent | Figma-related ask | `DISPATCH:agent:FigmaGetter` | `AGENT-FIGMA-SHAZAM` |
+| Surface | Trigger phrase | Marker |
+|---|---|---|
+| Rapper agent | "write a rap song about X" | `RAPPER-AGENT` |
+| poetry-command | "write a poem about X" | `POETRY-COMMAND` |
+| rapping-skill | "write a limerick about X" | `RAPPING-SKILL` |
+| FigmaGetter agent | Figma-related ask | `FIGMA-AGENT` |
 
 ## Running a case
 
@@ -51,10 +51,10 @@ Edit `.github/copilot/settings.json` for the setup the row needs, open an issue 
 - [ ] Rapper appears in the agent's `task` tool agent list
 
 ### Dispatch (the markers do the verification)
-- [ ] "Write a rap about CI and save to OUT.md" → `DISPATCH:agent:Rapper` + every line has `AGENT-RAPPER-FOSHIZZLE`
-- [ ] "Write a poem about CI and save to OUT.md" → `DISPATCH:command:poetry` + every line has `COMMAND-POETRY-HAIKU`
-- [ ] "Write a limerick about CI and save to OUT.md" → `DISPATCH:skill:rapping` + every line has `SKILL-RAPPER-WORDUP`
-- [ ] A Figma-related ask → `DISPATCH:agent:FigmaGetter` + sentences end with `AGENT-FIGMA-SHAZAM`
+- [ ] "Write a rap about CI and save to OUT.md" → `DISPATCH:RAPPER-AGENT` + every line ends with `RAPPER-AGENT`
+- [ ] "Write a poem about CI and save to OUT.md" → `DISPATCH:POETRY-COMMAND` + every line ends with `POETRY-COMMAND`
+- [ ] "Write a limerick about CI and save to OUT.md" → `DISPATCH:RAPPING-SKILL` + every line ends with `RAPPING-SKILL`
+- [ ] A Figma-related ask → `DISPATCH:FIGMA-AGENT` + sentences end with `FIGMA-AGENT`
 - [ ] Rap prompt does not produce skill markers, and vice versa (no cross-surface bleed)
 
 ### Safety
